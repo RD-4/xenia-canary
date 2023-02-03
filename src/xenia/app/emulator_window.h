@@ -71,6 +71,7 @@ class EmulatorWindow {
 
   void UpdateTitle();
   void SetFullscreen(bool fullscreen);
+  void HideCursor(bool hide_cursor);
   void ToggleFullscreen();
   void SetInitializingShaderStorage(bool initializing);
 

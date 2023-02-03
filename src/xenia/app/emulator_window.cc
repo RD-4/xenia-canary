@@ -59,6 +59,8 @@ DECLARE_bool(d3d12_clear_memory_page_state);
 DEFINE_bool(fullscreen, false, "Whether to launch the emulator in fullscreen.",
             "Display");
 
+DEFINE_bool(hide_cursor, false, "Whether to hide the mouse cursor.", "Display");
+
 DEFINE_bool(controller_hotkeys, true,
             "Toggle hotkeys for Xbox and PS controllers.", "General");
 
@@ -250,6 +252,10 @@ void EmulatorWindow::OnEmulatorInitialized() {
   // menu isn't disabled), enter fullscreen if requested.
   if (cvars::fullscreen) {
     SetFullscreen(true);
+  }
+
+  if (cvars::hide_cursor) {
+    HideCursor(true);
   }
 
   if (IsUseNexusForGameBarEnabled()) {
@@ -815,13 +821,6 @@ void EmulatorWindow::OnKeyDown(ui::KeyEvent& e) {
     case ui::VirtualKey::kF11: {
       ToggleFullscreen();
     } break;
-    case ui::VirtualKey::kEscape: {
-      // Allow users to escape fullscreen (but not enter it).
-      if (!window_->IsFullscreen()) {
-        return;
-      }
-      SetFullscreen(false);
-    } break;
 
 #ifdef DEBUG
     case ui::VirtualKey::kF7: {
@@ -1001,8 +1000,11 @@ void EmulatorWindow::SetFullscreen(bool fullscreen) {
     return;
   }
   window_->SetFullscreen(fullscreen);
-  window_->SetCursorVisibility(fullscreen
-                                   ? ui::Window::CursorVisibility::kAutoHidden
+}
+
+void EmulatorWindow::HideCursor(bool hide_cursor) {
+  window_->SetCursorVisibility(hide_cursor
+                                   ? ui::Window::CursorVisibility::kHidden
                                    : ui::Window::CursorVisibility::kVisible);
 }
 
